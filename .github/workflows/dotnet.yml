@@ -1,0 +1,29 @@
+name: .NET CI Build
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout del código
+      uses: actions/checkout@v4
+
+    - name: Configurar SDK de .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x' # Cambia por tu versión (ej. 6.0.x, 7.0.x o 8.0.x)
+
+    - name: Restaurar dependencias NuGet
+      run: dotnet restore
+
+    - name: Compilar solución (Build)
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Ejecutar pruebas unitarias (Test)
+      run: dotnet test --no-build --verbosity normal
